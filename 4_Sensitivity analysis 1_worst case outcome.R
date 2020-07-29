@@ -59,11 +59,10 @@ meta_data <- read_excel("Supplemental file 3_analyses data.xlsx",
 # Merge the arms details with study meta-data
 #------------------------------------------------
 dat <- dplyr::inner_join(
-				dat, 
-				subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
-				by="Tag"
-			)
-
+		dat, 
+		subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
+		by="Tag"
+		)
 dat$Follow.up.duration <- as.numeric(as.character(dat$Follow.up.duration))
 
 # Study had a max follow-up of 14 months on one of the patients
@@ -103,25 +102,24 @@ dat1$person_time <- ifelse(
 			prediction =TRUE
 		)
 	)
-
 # Egger's test for assessing publication bias
 e_t <- metabias(overall_rate, method.bias="linreg") 	
 
 (est <-	cbind(
-			n_arms	=	length(overall_rate$data$Study),
+			n_arms		=	length(overall_rate$data$Study),
 			n_treated	=	sum(overall_rate$data$n_treated),
 			n_events	=	sum(overall_rate$data$number_of_deaths__WORST),
 			n_PT		=	sum(overall_rate$data$person_time),
 			fe		=	exp(overall_rate$TE.fixed)*1000,
-			fe_l95	=	exp(overall_rate$lower.fixed)*1000, 
-			fe_u95	=	exp(overall_rate$upper.fixed)*1000 , 
+			fe_l95		=	exp(overall_rate$lower.fixed)*1000, 
+			fe_u95		=	exp(overall_rate$upper.fixed)*1000 , 
 			re		=	exp(overall_rate$TE.random)*1000 , 
-			re_l95	=	exp(overall_rate$lower.random)*1000, 
-			re_u95	=	exp(overall_rate$upper.random)*1000,
+			re_l95		=	exp(overall_rate$lower.random)*1000, 
+			re_u95		=	exp(overall_rate$upper.random)*1000,
 			i2		=	round(overall_rate$I2*100,3),
 			predict_l95	=	exp(overall_rate$lower.predict)*1000, 
 			predict_u95	=	exp(overall_rate$upper.predict)*1000 , 
-			eggers	= 	e_t$p.value,
+			eggers		= 	e_t$p.value,
 			copas_adj	=	exp(summary.copas(copas(overall_rate))$adjust$TE)*1000, 
 			copas_l95	=	exp(summary.copas(copas(overall_rate))$adjust$lower)*1000, 
 			copas_u95	=	exp(summary.copas(copas(overall_rate))$adjust$upper)*1000
@@ -137,8 +135,8 @@ est$pred	<- paste(round(est$predict_l95,4),"-", round(est$predict_u95,4), sep=""
 est$copas	<- paste(round(est$copas_adj,4),"[", round(est$copas_l95,4),"-", round(est$copas_u95,4), "]", sep="")
 
 est <- subset(est, 
-					select=c("n_p_t","fixed","random","i2","pred","copas")
-				)
+		select=c("n_p_t","fixed","random","i2","pred","copas")
+		)
 print(est)
 
 #===================================================================
@@ -175,20 +173,20 @@ drug_output	<- NULL
 
 		est <-	rbind(
 				drug		= 	results$data$drug_group_final[1],
-				n_arms	=	length(results$data$Study),
+				n_arms		=	length(results$data$Study),
 				n_treated	=	sum(results$data$n_treated),
 				n_events	=	sum(results$data$number_of_deaths__WORST),
 				n_PT		=	sum(results$data$person_time),
 				fe		=	exp(results$TE.fixed)*1000,
-				fe_l95	=	exp(results$lower.fixed)*1000, 
-				fe_u95	=	exp(results$upper.fixed)*1000 , 
+				fe_l95		=	exp(results$lower.fixed)*1000, 
+				fe_u95		=	exp(results$upper.fixed)*1000 , 
 				re		=	exp(results$TE.random)*1000 , 
-				re_l95	=	exp(results$lower.random)*1000, 
-				re_u95	=	exp(results$upper.random)*1000,
+				re_l95		=	exp(results$lower.random)*1000, 
+				re_u95		=	exp(results$upper.random)*1000,
 				i2		=	round(results$I2*100,3),
 				predict_l95	=	exp(results$lower.predict)*1000, 
 				predict_u95	=	exp(results$upper.predict)*1000 , 
-				eggers	= 	e_t$p.value,
+				eggers		= 	e_t$p.value,
 				copas_adj	=	exp(summary.copas(copas(results))$adjust$TE)*1000, 
 				copas_l95	=	exp(summary.copas(copas(results))$adjust$lower)*1000, 
 				copas_u95	=	exp(summary.copas(copas(results))$adjust$upper)*1000
@@ -198,21 +196,21 @@ drug_output	<- NULL
 drug_output <- as.data.frame(t(drug_output))
 
 drug_output[,2:ncol(drug_output)] <- lapply(
-							drug_output[,2:ncol(drug_output)], 
-							function(x) as.numeric(as.character(x))
-					)
+					drug_output[,2:ncol(drug_output)], 
+					function(x) as.numeric(as.character(x))
+				)
 
 # Tidying up the results and export as a table
-drug_output$n_p_t		<- paste(drug_output$n_arms,drug_output$n_treated,drug_output$n_events, sep="/")
-drug_output$fixed		<- paste(round(drug_output$fe,4),"[", round(drug_output$fe_l95,4),"-", round(drug_output$fe_u95,4), "]", sep="")
+drug_output$n_p_t	<- paste(drug_output$n_arms,drug_output$n_treated,drug_output$n_events, sep="/")
+drug_output$fixed	<- paste(round(drug_output$fe,4),"[", round(drug_output$fe_l95,4),"-", round(drug_output$fe_u95,4), "]", sep="")
 drug_output$random	<- paste(round(drug_output$re,4),"[", round(drug_output$re_l95,4),"-", round(drug_output$re_u95,4), "]", sep="")
-drug_output$pred		<- paste(round(drug_output$predict_l95,4),"-", round(drug_output$predict_u95,4), sep="")
-drug_output$copas		<- paste(round(drug_output$copas_adj,4),"[", round(drug_output$copas_l95,4),"-", round(drug_output$copas_u95,4), "]", sep="")
+drug_output$pred	<- paste(round(drug_output$predict_l95,4),"-", round(drug_output$predict_u95,4), sep="")
+drug_output$copas	<- paste(round(drug_output$copas_adj,4),"[", round(drug_output$copas_l95,4),"-", round(drug_output$copas_u95,4), "]", sep="")
 
 (drug_output <- subset(drug_output, 
-					select=c("drug","n_p_t","fixed","random","i2","pred","copas")
-				))
-
+			select=c("drug","n_p_t","fixed","random","i2","pred","copas")
+				)
+			)
 #========================================================================
 # Calculation of rates for each of the geographical locations seaprately 
 #========================================================================
@@ -249,20 +247,20 @@ for (i in 1: nrow(region)){
 
 		est <-	rbind(
 				region_name	= 	results$data$Study.Region[1],
-				n_arms	=	length(results$data$Study),
+				n_arms		=	length(results$data$Study),
 				n_treated	=	sum(results$data$n_treated),
 				n_events	=	sum(results$data$number_of_deaths__WORST),
 				n_PT		=	sum(results$data$ person_time),
 				fe		=	exp(results$TE.fixed)*1000,
-				fe_l95	=	exp(results$lower.fixed)*1000, 
-				fe_u95	=	exp(results$upper.fixed)*1000 , 
+				fe_l95		=	exp(results$lower.fixed)*1000, 
+				fe_u95		=	exp(results$upper.fixed)*1000 , 
 				re		=	exp(results$TE.random)*1000 , 
-				re_l95	=	exp(results$lower.random)*1000, 
-				re_u95	=	exp(results$upper.random)*1000,
+				re_l95		=	exp(results$lower.random)*1000, 
+				re_u95		=	exp(results$upper.random)*1000,
 				i2		=	round(results$I2*100,3),
 				predict_l95	=	exp(results$lower.predict)*1000, 
 				predict_u95	=	exp(results$upper.predict)*1000 , 
-				eggers	= 	e_t$p.value,
+				eggers		= 	e_t$p.value,
 				copas_adj	=	exp(summary.copas(copas(results))$adjust$TE)*1000, 
 				copas_l95	=	exp(summary.copas(copas(results))$adjust$lower)*1000, 
 				copas_u95	=	exp(summary.copas(copas(results))$adjust$upper)*1000
@@ -272,19 +270,19 @@ for (i in 1: nrow(region)){
 region_output <- as.data.frame(t(region_output))
 
 region_output[,2:ncol(region_output)] <- lapply(
-							region_output[,2:ncol(region_output)], 
-							function(x) as.numeric(as.character(x))
+						region_output[,2:ncol(region_output)], 
+						function(x) as.numeric(as.character(x))
 						)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
-					select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
-				)
+			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
+			)
 print(region_output)
 
 #===================================================================
@@ -315,20 +313,20 @@ for (i in 1: nrow(hiv_status)){
 
 		est <-	rbind(
 				hiv_status	= 	results$data$HIV[1],
-				n_arms	=	length(results$data$Study),
+				n_arms		=	length(results$data$Study),
 				n_treated	=	sum(results$data$n_treated),
 				n_events	=	sum(results$data$number_of_deaths__WORST),
 				n_PT		=	sum(results$data$ person_time),
 				fe		=	exp(results$TE.fixed)*1000,
-				fe_l95	=	exp(results$lower.fixed)*1000, 
-				fe_u95	=	exp(results$upper.fixed)*1000 , 
+				fe_l95		=	exp(results$lower.fixed)*1000, 
+				fe_u95		=	exp(results$upper.fixed)*1000 , 
 				re		=	exp(results$TE.random)*1000 , 
-				re_l95	=	exp(results$lower.random)*1000, 
-				re_u95	=	exp(results$upper.random)*1000,
+				re_l95		=	exp(results$lower.random)*1000, 
+				re_u95		=	exp(results$upper.random)*1000,
 				i2		=	round(results$I2*100,3),
 				predict_l95	=	exp(results$lower.predict)*1000, 
 				predict_u95	=	exp(results$upper.predict)*1000 , 
-				eggers	= 	e_t$p.value,
+				eggers		= 	e_t$p.value,
 				copas_adj	=	exp(summary.copas(copas(results))$adjust$TE)*1000, 
 				copas_l95	=	exp(summary.copas(copas(results))$adjust$lower)*1000, 
 				copas_u95	=	exp(summary.copas(copas(results))$adjust$upper)*1000
@@ -338,9 +336,9 @@ for (i in 1: nrow(hiv_status)){
 hiv_output <- as.data.frame(t(hiv_output))
 
 hiv_output[,2:ncol(hiv_output)] <- lapply(
-							hiv_output[,2:ncol(hiv_output)], 
-							function(x) as.numeric(as.character(x))
-						)
+					hiv_output[,2:ncol(hiv_output)], 
+					function(x) as.numeric(as.character(x))
+				)
 # Tidying up the results and export as a table
 hiv_output$n_p_t		<- paste(hiv_output$n_arms,hiv_output$n_treated,hiv_output$n_events, sep="/")
 hiv_output$fixed		<- paste(round(hiv_output$fe,4),"[", round(hiv_output$fe_l95,4),"-", round(hiv_output$fe_u95,4), "]", sep="")
@@ -349,8 +347,8 @@ hiv_output$pred		<- paste(round(hiv_output$predict_l95,4),"-", round(hiv_output$
 hiv_output$copas		<- paste(round(hiv_output$copas_adj,4),"[", round(hiv_output$copas_l95,4),"-", round(hiv_output$copas_u95,4), "]", sep="")
 
 hiv_output <- subset(hiv_output, 
-					select=c("hiv_status","n_p_t","fixed","random","i2","pred","copas")
-				)
+			select=c("hiv_status","n_p_t","fixed","random","i2","pred","copas")
+			)
 print(hiv_output)
 
 # End script (Not run)
