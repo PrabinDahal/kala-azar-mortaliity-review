@@ -59,10 +59,10 @@ meta_data <- read_excel("Supplemental file 3_analyses data.xlsx",
 # Merge the arms details with study meta-data
 #------------------------------------------------
 dat <- dplyr::inner_join(
-				dat, 
-				subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
-				by="Tag"
-			)
+		dat, 
+		subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
+		by="Tag"
+		)
 
 dat$Follow.up.duration <- as.numeric(as.character(dat$Follow.up.duration))
 
@@ -85,7 +85,6 @@ dat1$person_time <- ifelse(
 				dat1$follow_up <30,dat1$n_treated*dat1$follow_up,
 				dat1$n_treated*30
 				)
-
 # Using suggestion from the metafor vignette to enchance convergence
 # http://127.0.0.1:30486/library/metafor/html/rma.uni.html
 
@@ -186,7 +185,7 @@ drug_output	<- NULL
 
 		est <-	rbind(
 				drug		= 	results$data$drug_group_final[1],
-				n_arms	=	length(results $data$ Study),
+				n_arms		=	length(results $data$ Study),
 				n_treated	=	sum(results $data$n_treated),
 				n_events	=	sum(results $data$n_deaths_month),
 				n_PT		=	sum(results $data$ person_time),
@@ -556,7 +555,7 @@ print(rand_output)
 #=================================================
 # Calculation of rates by different age categories
 #=================================================
-age	<- as.data.frame(table(dat1$age_range))
+age<- as.data.frame(table(dat1$age_range))
 
 # Null matrix to store results
 age_output	<- NULL
@@ -616,8 +615,8 @@ age_output$pred		<- paste(round(age_output$predict_l95,4),"-", round(age_output$
 age_output$copas	<- paste(round(age_output$copas_adj,4),"[", round(age_output$copas_l95,4),"-", round(age_output$copas_u95,4), "]", sep="")
 
 age_output <- subset(age_output, 
-					select=c("age_range","n_p_t","fixed","random","i2","pred","copas")
-				)
+			select=c("age_range","n_p_t","fixed","random","i2","pred","copas")
+			)
 print(age_output)
 
 #======================================================================================
@@ -669,8 +668,8 @@ drug_output$n_p_t	<- paste(drug_output$n_arms,drug_output$n_treated,drug_output$
 drug_output$random	<- paste(round(drug_output$re,4),"[", round(drug_output$re_l95,4),"-", round(drug_output$re_u95,4), "]", sep="")
 
 drug_output <- subset(drug_output, 
-					select=c("drug","n_p_t","random")
-				)
+			select=c("drug","n_p_t","random")
+			)
 print(drug_output)
 
 #======================================================================================
