@@ -340,11 +340,11 @@ hiv_output[,2:ncol(hiv_output)] <- lapply(
 					function(x) as.numeric(as.character(x))
 				)
 # Tidying up the results and export as a table
-hiv_output$n_p_t		<- paste(hiv_output$n_arms,hiv_output$n_treated,hiv_output$n_events, sep="/")
-hiv_output$fixed		<- paste(round(hiv_output$fe,4),"[", round(hiv_output$fe_l95,4),"-", round(hiv_output$fe_u95,4), "]", sep="")
-hiv_output$random		<- paste(round(hiv_output$re,4),"[", round(hiv_output$re_l95,4),"-", round(hiv_output$re_u95,4), "]", sep="")
+hiv_output$n_p_t	<- paste(hiv_output$n_arms,hiv_output$n_treated,hiv_output$n_events, sep="/")
+hiv_output$fixed	<- paste(round(hiv_output$fe,4),"[", round(hiv_output$fe_l95,4),"-", round(hiv_output$fe_u95,4), "]", sep="")
+hiv_output$random	<- paste(round(hiv_output$re,4),"[", round(hiv_output$re_l95,4),"-", round(hiv_output$re_u95,4), "]", sep="")
 hiv_output$pred		<- paste(round(hiv_output$predict_l95,4),"-", round(hiv_output$predict_u95,4), sep="")
-hiv_output$copas		<- paste(round(hiv_output$copas_adj,4),"[", round(hiv_output$copas_l95,4),"-", round(hiv_output$copas_u95,4), "]", sep="")
+hiv_output$copas	<- paste(round(hiv_output$copas_adj,4),"[", round(hiv_output$copas_l95,4),"-", round(hiv_output$copas_u95,4), "]", sep="")
 
 hiv_output <- subset(hiv_output, 
 			select=c("hiv_status","n_p_t","fixed","random","i2","pred","copas")
