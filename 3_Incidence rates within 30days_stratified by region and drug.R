@@ -61,9 +61,9 @@ meta_data <- read_excel("Supplemental file 3_analyses data.xlsx",
 # Merge the arms details with study meta-data
 #------------------------------------------------
 dat <- dplyr::inner_join(
-			dat, 
-			subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
-			by="Tag"
+		dat, 
+		subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
+		by="Tag"
 		)
 
 dat$Follow.up.duration <- as.numeric(as.character(dat$Follow.up.duration))
@@ -185,9 +185,9 @@ AMB_fat <- dat1[which(dat1$drug_group_final=="AmBb-lipid"),]
 AMB_fat %>% 
 	dplyr::group_by(drug_group,Study.Region) %>%
 	dplyr::summarise(
-		n_arms = length(Tag),
-		n_patients = sum(n_treated, na.rm=TRUE),
-		n_deaths = sum(n_deaths_month, na.rm=TRUE)
+		n_arms		= length(Tag),
+		n_patients	= sum(n_treated, na.rm=TRUE),
+		n_deaths	= sum(n_deaths_month, na.rm=TRUE)
 	)
 
 # Calculation of rates for each of the geographical locations seaprately 
@@ -245,11 +245,11 @@ region_output[,2:ncol(region_output)] <- lapply(
 						function(x) as.numeric(as.character(x))
 						)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
 			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
@@ -323,15 +323,15 @@ region_output[,2:ncol(region_output)] <- lapply(
 					function(x) as.numeric(as.character(x))
 					)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
-					select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
-				)
+			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
+		)
 print(region_output)
 
 #==============================================================
@@ -374,7 +374,7 @@ for (i in 1: nrow(region)){
 
 		est <-	rbind(
 				region_name	= 	results$data$Study.Region[1],
-				n_arms	=	length(results$data$Study),
+				n_arms		=	length(results$data$Study),
 				n_treated	=	sum(results$data$n_treated),
 				n_events	=	sum(results$data$n_deaths_month),
 				n_PT		=	sum(results$data$ person_time),
@@ -480,11 +480,11 @@ region_output[,2:ncol(region_output)] <- lapply(
 						function(x) as.numeric(as.character(x))
 					)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
 			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
@@ -579,11 +579,11 @@ region_output[,2:ncol(region_output)] <- lapply(
 					function(x) as.numeric(as.character(x))
 					)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
 			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
@@ -657,11 +657,11 @@ region_output[,2:ncol(region_output)] <- lapply(
 					function(x) as.numeric(as.character(x))
 					)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
 			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
@@ -732,11 +732,11 @@ region_output[,2:ncol(region_output)] <- lapply(
 					function(x) as.numeric(as.character(x))
 					)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
 			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
@@ -799,11 +799,11 @@ region_output[,2:ncol(region_output)] <- lapply(
 						function(x) as.numeric(as.character(x))
 						)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
 			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
@@ -881,11 +881,11 @@ region_output[,2:ncol(region_output)] <- lapply(
 						function(x) as.numeric(as.character(x))
 						)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
 			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
@@ -904,7 +904,6 @@ Sitamaquine%>%
 		n_patients = sum(n_treated, na.rm=TRUE),
 		n_deaths = sum(n_deaths_month, na.rm=TRUE)
 	)
-
 
 # Only 1 event from ISC
 table(Sitamaquine$Study.Region, Sitamaquine$n_deaths_month)
@@ -964,11 +963,11 @@ region_output[,2:ncol(region_output)] <- lapply(
 							function(x) as.numeric(as.character(x))
 						)
 # Tidying up the results and export as a table
-region_output$n_p_t		<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
-region_output$fixed		<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
-region_output$random		<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
-region_output$pred		<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
-region_output$copas		<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
+region_output$n_p_t	<- paste(region_output$n_arms,region_output$n_treated,region_output$n_events, sep="/")
+region_output$fixed	<- paste(round(region_output$fe,4),"[", round(region_output$fe_l95,4),"-", round(region_output$fe_u95,4), "]", sep="")
+region_output$random	<- paste(round(region_output$re,4),"[", round(region_output$re_l95,4),"-", round(region_output$re_u95,4), "]", sep="")
+region_output$pred	<- paste(round(region_output$predict_l95,4),"-", round(region_output$predict_u95,4), sep="")
+region_output$copas	<- paste(round(region_output$copas_adj,4),"[", round(region_output$copas_l95,4),"-", round(region_output$copas_u95,4), "]", sep="")
 
 region_output <- subset(region_output, 
 			select=c("region_name","n_p_t","fixed","random","i2","pred","copas")
@@ -978,9 +977,6 @@ print(region_output)
 # Other drugs : Regional breakdown
 #=============================================================================
 other<- dat1[which(dat1$drug_group_final=="Other"),]
-
-# Only 1 event from ISC
-table(other$Study.Region, other$n_deaths_month)
-# No events
+table(other$Study.Region, other$n_deaths_month) # Only 1 event from ISC
 
 # End script (Not run)
