@@ -61,10 +61,10 @@ meta_data <- read_excel("Supplemental file 3_analyses data.xlsx",
 # Merge the arms details with study meta-data
 #------------------------------------------------
 dat <- dplyr::inner_join(
-				dat, 
-				subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
-				by="Tag"
-			)
+		dat, 
+		subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
+		by="Tag"
+		)
 
 dat$Follow.up.duration <- as.numeric(as.character(dat$Follow.up.duration))
 
@@ -84,9 +84,9 @@ dat1 <- dat[which(!is.na(dat$n_deaths_month)),]
 dat1$follow_up <- ifelse(is.na(dat1$Follow.up.duration), 30, dat1$Follow.up.duration )
 
 dat1$person_time <- ifelse(
-				dat1$follow_up <30,dat1$n_treated*dat1$follow_up,
-				dat1$n_treated*30
-				)
+			dat1$follow_up <30,dat1$n_treated*dat1$follow_up,
+			dat1$n_treated*30
+			)
 
 # Using suggestion from the metafor vignette to enchance convergence
 # http://127.0.0.1:30486/library/metafor/html/rma.uni.html
@@ -163,7 +163,6 @@ e <- dat1	%>%
 e$domain <- "incomplete_outcome"
 e$risk_of_bias <- e$incomplete_outcome_data_addressed
 
-
 # selective_reporting
 f <- dat1	%>% 
 		dplyr::group_by(selective_reporting) %>%
@@ -207,20 +206,16 @@ print(rob_groups)
 		)
 	)
 
-
 overall_est <-	rbind(
-				n_arms	=	length(overall_rate$data$Study),
+				n_arms		=	length(overall_rate$data$Study),
 				n_treated	=	sum(overall_rate$data$n_treated),
 				n_events	=	sum(overall_rate$data$n_deaths_month),
 				n_PT		=	sum(overall_rate$data$person_time),
 				re		=	exp(overall_rate$TE.random)*1000 , 
-				re_l95	=	exp(overall_rate$lower.random)*1000, 
-				re_u95	=	exp(overall_rate$upper.random)*1000,
+				re_l95		=	exp(overall_rate$lower.random)*1000, 
+				re_u95		=	exp(overall_rate$upper.random)*1000,
 				i2		=	round(overall_rate$I2*100,3)
 				)
-
-overall_est
-
 overall_est <- as.data.frame(t(overall_est))
 
 # Tidying up the results and export as a table
@@ -231,8 +226,8 @@ overall_est$domain 		<- "Overall"
 overall_est$risk_of_bias	<- "Overall"
 
 overall_est <- subset(overall_est, 
-					select=c("domain","risk_of_bias","n_p_t","random","i2")
-				)
+			select=c("domain","risk_of_bias","n_p_t","random","i2")
+			)
 print(overall_est)
 #=========================================================================
 # Test of moderator effects: different risk of bias domains
@@ -269,19 +264,18 @@ for (i in 1: nrow(bias)){
 
 		est <-	rbind(
 				sequence	= 	results$data$random_sequence_generation[1],
-				n_arms	=	length(results$data$Study),
+				n_arms		=	length(results$data$Study),
 				n_treated	=	sum(results$data$n_treated),
 				n_events	=	sum(results$data$n_deaths_month),
 				n_PT		=	sum(results$data$person_time),
 				re		=	exp(results$TE.random)*1000 , 
-				re_l95	=	exp(results$lower.random)*1000, 
-				re_u95	=	exp(results$upper.random)*1000,
+				re_l95		=	exp(results$lower.random)*1000, 
+				re_u95		=	exp(results$upper.random)*1000,
 				i2		=	round(results$I2*100,3)
 				)
 			sequence_output <- cbind(est,sequence_output)
 		}
 sequence_output <- as.data.frame(t(sequence_output))
-sequence_output
 sequence_output[,2:ncol(sequence_output)] <- lapply(
 							sequence_output[,2:ncol(sequence_output)], 
 							function(x) as.numeric(as.character(x))
@@ -318,13 +312,13 @@ for (i in 1: nrow(bias)){
 
 		est <-	rbind(
 				allocation	= 	results$data$allocation_concealment[1],
-				n_arms	=	length(results$data$Study),
+				n_arms		=	length(results$data$Study),
 				n_treated	=	sum(results$data$n_treated),
 				n_events	=	sum(results$data$n_deaths_month),
 				n_PT		=	sum(results$data$person_time),
 				re		=	exp(results$TE.random)*1000 , 
-				re_l95	=	exp(results$lower.random)*1000, 
-				re_u95	=	exp(results$upper.random)*1000,
+				re_l95		=	exp(results$lower.random)*1000, 
+				re_u95		=	exp(results$upper.random)*1000,
 				i2		=	round(results$I2*100,3)
 				)
 			allocation_output <- cbind(est,allocation_output)
@@ -340,7 +334,7 @@ allocation_output[,2:ncol(allocation_output)] <- lapply(
 allocation_output$n_p_t		<- paste(allocation_output$n_arms,allocation_output$n_treated,allocation_output$n_events, sep="/")
 allocation_output$random	<- paste(round(allocation_output$re,4),"[", round(allocation_output$re_l95,4),"-", round(allocation_output$re_u95,4), "]", sep="")
 
-allocation_output$domain 		<- "allocation"
+allocation_output$domain 	<- "allocation"
 allocation_output$risk_of_bias	<- allocation_output$allocation
 
 allocation_output <- subset(allocation_output, 
@@ -369,13 +363,13 @@ for (i in 1: nrow(bias)){
 
 		est <-	rbind(
 				blinding	= 	results$data$blinding_of_participants_and_personnel[1],
-				n_arms	=	length(results$data$Study),
+				n_arms		=	length(results$data$Study),
 				n_treated	=	sum(results$data$n_treated),
 				n_events	=	sum(results$data$n_deaths_month),
 				n_PT		=	sum(results$data$person_time),
 				re		=	exp(results$TE.random)*1000 , 
-				re_l95	=	exp(results$lower.random)*1000, 
-				re_u95	=	exp(results$upper.random)*1000,
+				re_l95		=	exp(results$lower.random)*1000, 
+				re_u95		=	exp(results$upper.random)*1000,
 				i2		=	round(results$I2*100,3)
 				)
 			blinding_output <- cbind(est,blinding_output)
@@ -422,13 +416,13 @@ for (i in 1: nrow(bias)){
 
 		est <-	rbind(
 				outcome_blinding	= 	results$data$blinding_of_outcome_assessment[1],
-				n_arms		=	length(results$data$Study),
+				n_arms			=	length(results$data$Study),
 				n_treated		=	sum(results$data$n_treated),
 				n_events		=	sum(results$data$n_deaths_month),
 				n_PT			=	sum(results$data$person_time),
 				re			=	exp(results$TE.random)*1000 , 
-				re_l95		=	exp(results$lower.random)*1000, 
-				re_u95		=	exp(results$upper.random)*1000,
+				re_l95			=	exp(results$lower.random)*1000, 
+				re_u95			=	exp(results$upper.random)*1000,
 				i2			=	round(results$I2*100,3)
 				)
 			outcome_blinding_output <- cbind(est,outcome_blinding_output)
@@ -457,7 +451,6 @@ print(outcome_blinding_output)
 #===================================================================
 bias<- as.data.frame(table(dat1$incomplete_outcome_data_addressed))
 bias <- bias [which(bias$Var1!="Unclear"),] # no events
-bias 
 table(dat1$incomplete_outcome_data_addressed, dat1$n_deaths_month)
 
 incomplete_output<- NULL
@@ -474,14 +467,14 @@ for (i in 1: nrow(bias)){
 				)
 
 		est <-	rbind(
-				incomplete_outcome= 	results$data$incomplete_outcome_data_addressed[1],
-				n_arms		=	length(results$data$Study),
+				incomplete_outcome	= 	results$data$incomplete_outcome_data_addressed[1],
+				n_arms			=	length(results$data$Study),
 				n_treated		=	sum(results$data$n_treated),
 				n_events		=	sum(results$data$n_deaths_month),
 				n_PT			=	sum(results$data$person_time),
 				re			=	exp(results$TE.random)*1000 , 
-				re_l95		=	exp(results$lower.random)*1000, 
-				re_u95		=	exp(results$upper.random)*1000,
+				re_l95			=	exp(results$lower.random)*1000, 
+				re_u95			=	exp(results$upper.random)*1000,
 				i2			=	round(results$I2*100,3)
 				)
 			incomplete_output <- cbind(est,incomplete_output)
@@ -510,7 +503,6 @@ print(incomplete_output)
 #===================================================================
 bias<- as.data.frame(table(dat1$selective_reporting))
 bias <- bias [which(bias$Var1!="High"),] # no events
-bias 
 table(dat1$selective_reporting, dat1$n_deaths_month)
 
 selective_output<- NULL
@@ -528,13 +520,13 @@ for (i in 1: nrow(bias)){
 
 		est <-	rbind(
 				selective		= 	results$data$selective_reporting[1],
-				n_arms		=	length(results$data$Study),
+				n_arms			=	length(results$data$Study),
 				n_treated		=	sum(results$data$n_treated),
 				n_events		=	sum(results$data$n_deaths_month),
 				n_PT			=	sum(results$data$person_time),
 				re			=	exp(results$TE.random)*1000 , 
-				re_l95		=	exp(results$lower.random)*1000, 
-				re_u95		=	exp(results$upper.random)*1000,
+				re_l95			=	exp(results$lower.random)*1000, 
+				re_u95			=	exp(results$upper.random)*1000,
 				i2			=	round(results$I2*100,3)
 				)
 			selective_output <- cbind(est,selective_output)
@@ -563,7 +555,6 @@ print(selective_output)
 #===================================================================
 bias<- as.data.frame(table(dat1$aems_in_place))
 bias <- bias [which(bias$Var1!="Unclear"),] # no events
-bias 
 table(dat1$aems_in_place, dat1$n_deaths_month)
 
 aems_output<- NULL
@@ -581,13 +572,13 @@ for (i in 1: nrow(bias)){
 
 		est <-	rbind(
 				aems			= 	results$data$aems_in_place[1],
-				n_arms		=	length(results$data$Study),
+				n_arms			=	length(results$data$Study),
 				n_treated		=	sum(results$data$n_treated),
 				n_events		=	sum(results$data$n_deaths_month),
 				n_PT			=	sum(results$data$person_time),
 				re			=	exp(results$TE.random)*1000 , 
-				re_l95		=	exp(results$lower.random)*1000, 
-				re_u95		=	exp(results$upper.random)*1000,
+				re_l95			=	exp(results$lower.random)*1000, 
+				re_u95			=	exp(results$upper.random)*1000,
 				i2			=	round(results$I2*100,3)
 				)
 			aems_output <- cbind(est,aems_output)
@@ -617,8 +608,6 @@ print(aems_output)
 OUTPUT <- rbind(overall_est,aems_output,allocation_output,blinding_output,incomplete_output,
 			outcome_blinding_output,selective_output,sequence_output
 		)
-
-
 print(OUTPUT)
 
 # End script (Not run)
