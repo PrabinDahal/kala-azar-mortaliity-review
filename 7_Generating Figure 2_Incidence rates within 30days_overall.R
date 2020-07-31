@@ -61,11 +61,10 @@ meta_data <- read_excel("Supplemental file 3_analyses data.xlsx",
 # Merge the arms details with study meta-data
 #------------------------------------------------
 dat <- dplyr::inner_join(
-				dat, 
-				subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
-				by="Tag"
+			dat, 
+			subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
+			by="Tag"
 			)
-
 dat$Follow.up.duration <- as.numeric(as.character(dat$Follow.up.duration))
 
 # Study had a max follow-up of 14 months on one of the patients
@@ -84,9 +83,9 @@ dat1 <- dat[which(!is.na(dat$n_deaths_month)),]
 dat1$follow_up <- ifelse(is.na(dat1$Follow.up.duration), 30, dat1$Follow.up.duration )
 
 dat1$person_time <- ifelse(
-				dat1$follow_up <30,dat1$n_treated*dat1$follow_up,
-				dat1$n_treated*30
-				)
+			dat1$follow_up <30,dat1$n_treated*dat1$follow_up,
+			dat1$n_treated*30
+			)
 
 # Using suggestion from the metafor vignette to enchance convergence
 # http://127.0.0.1:30486/library/metafor/html/rma.uni.html
@@ -124,22 +123,22 @@ drug_output	<- NULL
 
 		est <-	rbind(
 				drug		= 	results$data$drug_group_final[1],
-				n_arms	=	length(results $data$ Study),
+				n_arms		=	length(results $data$ Study),
 				n_treated	=	sum(results $data$n_treated),
 				n_events	=	sum(results $data$n_deaths_month),
 				n_PT		=	sum(results $data$ person_time),
 				fe		=	exp(results$TE.fixed)*1000,
-				#se_se	=	results$seTE.fixed,
-				fe_l95	=	exp(results$lower.fixed)*1000, 
-				fe_u95	=	exp(results$upper.fixed)*1000 , 
+				#se_se		=	results$seTE.fixed,
+				fe_l95		=	exp(results$lower.fixed)*1000, 
+				fe_u95		=	exp(results$upper.fixed)*1000 , 
 				re		=	exp(results$TE.random)*1000 , 
-				#re_se	=	results$seTE.random, 
-				re_l95	=	exp(results$lower.random)*1000, 
-				re_u95	=	exp(results$upper.random)*1000,
+				#re_se		=	results$seTE.random, 
+				re_l95		=	exp(results$lower.random)*1000, 
+				re_u95		=	exp(results$upper.random)*1000,
 				i2		=	round(results$I2*100,3),
 				predict_l95	=	exp(results$lower.predict)*1000, 
 				predict_u95	=	exp(results$upper.predict)*1000 , 
-				eggers	= 	e_t$p.value,
+				eggers		= 	e_t$p.value,
 				copas_adj	=	exp(summary.copas(copas(results))$adjust$TE)*1000, 
 				copas_l95	=	exp(summary.copas(copas(results))$adjust$lower)*1000, 
 				copas_u95	=	exp(summary.copas(copas(results))$adjust$upper)*1000
@@ -152,8 +151,6 @@ drug_output[,2:ncol(drug_output)] <- lapply(
 							drug_output[,2:ncol(drug_output)], 
 							function(x) as.numeric(as.character(x))
 						)
-
-
 
 #================================================================
 # Tidying up drug names for plot
@@ -173,7 +170,6 @@ drug_output$drug<- recode(drug_output$drug, "PA combination regimen"="Pentavalen
 # Fold-difference between Copas adjusted estiamte and from the random effects analysis
 #================================================================
 drug_output$fold_difference <- drug_output$copas_adj/drug_output$re
-drug_output
 drug_output[,c(1,9,15,16,19)]
 
 #================================================================
@@ -197,33 +193,23 @@ b<- ggplot(drug_output, aes(x=reorder(drug, copas_adj), y=copas_adj)) +
 	ggtitle("Bias adjusted estimates")+
 	coord_flip()
 
-c<- ggplot(drug_output, aes(x=reorder(drug, predict_u95), y=predict_u95)) + 
-  	geom_pointrange(aes(ymin=predict_l95, ymax=predict_u95),size=1,stroke =1,col="#00AFBB")+
-	ylab("Incidence rate of mortality (per 1000 person-days)") +
-	ylim(0,8)+
-	xlab("")+
-	ggtitle("95% Prediction interval")+
-	coord_flip()
-
-###########################################################################################
-# Use cowplot libray to create panel & export as high resolution graph (600 dpi)
-###########################################################################################
+#=====================================================================
+# Use cowplot libray to create panel & export as high resolution graph
+#=====================================================================
 library(cowplot)
 setwd("C:/Users/pdahl/Dropbox/_VL AE Working Folder/AE MS/Final AE MS and codes/Results")
 
 tiff(file="Figure_2.tiff", 
-            width=36, 
+            	width=36, 
 		height=14, 
 		units="cm", 
-            pointsize="13", 
+            	pointsize="13", 
 		compression = "lzw+p", 
-            bg="white",
+            	bg="white",
 		res=600, 
 		antialias = "none"
 	)
-
 plot_grid(a,b)
-
 dev.off() # End export
 
 # End script (Not run)
