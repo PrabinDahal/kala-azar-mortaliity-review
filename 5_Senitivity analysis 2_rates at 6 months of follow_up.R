@@ -61,11 +61,10 @@ meta_data <- read_excel("Supplemental file 3_analyses data.xlsx",
 # Merge the arms details with study meta-data
 #------------------------------------------------
 dat <- dplyr::inner_join(
-				dat, 
-				subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
-				by="Tag"
+			dat, 
+			subset(meta_data,select=c("Tag","Follow.up.duration","age_range","HIV","Allegery_history","Pregnant","Blinding")),
+			by="Tag"
 			)
-
 dat$Follow.up.duration <- as.numeric(as.character(dat$Follow.up.duration))
 
 # Study had a max follow-up of 14 months on one of the patients
@@ -106,13 +105,13 @@ dat1$person_time <- dat1$n_treated*dat1$follow_up
 	)
 
 (est <-	cbind(
-			n_arms	=	length(overall_rate$data$Study),
+			n_arms		=	length(overall_rate$data$Study),
 			n_treated	=	sum(overall_rate$data$n_treated),
 			n_events	=	sum(overall_rate$data$number_of_deaths__WORST),
 			n_PT		=	sum(overall_rate$data$person_time),
 			re		=	exp(overall_rate$TE.random)*1000 , 
-			re_l95	=	exp(overall_rate$lower.random)*1000, 
-			re_u95	=	exp(overall_rate$upper.random)*1000
+			re_l95		=	exp(overall_rate$lower.random)*1000, 
+			re_u95		=	exp(overall_rate$upper.random)*1000
 		)
 	)
 est <- as.data.frame(est)
@@ -161,13 +160,13 @@ drug_output	<- NULL
 
 		est <-	rbind(
 				drug		= 	results$data$drug_group_final[1],
-				n_arms	=	length(results$data$Study),
+				n_arms		=	length(results$data$Study),
 				n_treated	=	sum(results$data$n_treated),
 				n_events	=	sum(results$data$number_of_deaths__WORST),
 				n_PT		=	sum(results$data$person_time),
 				re		=	exp(results$TE.random)*1000 , 
-				re_l95	=	exp(results$lower.random)*1000, 
-				re_u95	=	exp(results$upper.random)*1000
+				re_l95		=	exp(results$lower.random)*1000, 
+				re_u95		=	exp(results$upper.random)*1000
 				)
 			drug_output <- cbind(est,drug_output)
 		}
@@ -179,12 +178,11 @@ drug_output[,2:ncol(drug_output)] <- lapply(
 					)
 
 # Tidying up the results and export as a table
-drug_output$n_p_t		<- paste(drug_output$n_arms,drug_output$n_treated,drug_output$n_events, sep="/")
+drug_output$n_p_t	<- paste(drug_output$n_arms,drug_output$n_treated,drug_output$n_events, sep="/")
 drug_output$random	<- paste(round(drug_output$re,4),"[", round(drug_output$re_l95,4),"-", round(drug_output$re_u95,4), "]", sep="")
 
 (drug_output <- subset(drug_output, 
-					select=c("drug","n_p_t","random")
-				))
-
-
+			select=c("drug","n_p_t","random")
+			)
+		)
 # End
